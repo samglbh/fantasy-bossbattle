@@ -6,12 +6,6 @@ namespace SpriteKind {
     export const slot3 = SpriteKind.create()
     export const spell = SpriteKind.create()
 }
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    mySprite.image.flipX()
-})
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    mySprite.image.flipX()
-})
 let mySprite9: Sprite = null
 let mySprite8: Sprite = null
 let mySprite7: Sprite = null
@@ -330,6 +324,3 @@ statusbar = statusbars.create(20, 4, StatusBarKind.Health)
 statusbar.setPosition(120, 5)
 statusbar.setBarSize(100, 4)
 statusbar.setColor(2, 12)
-mySprite.image.flipX()
-controller.moveSprite(mySprite)
-scene.cameraFollowSprite(mySprite)
