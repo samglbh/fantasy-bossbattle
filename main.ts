@@ -149,30 +149,18 @@ function level1 (mySprite: Sprite) {
         . . c b b b c d 9 9 b c . . . . 
         `, SpriteKind.Enemy)
     mySprite10.setPosition(108, 86)
-    projectile = sprites.createProjectileFromSprite(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . 8 9 9 9 8 8 8 . . . . . 
-        . . . 8 9 1 1 1 1 1 9 9 8 8 8 . 
-        . . . 8 1 1 1 1 1 1 1 1 1 1 1 . 
-        . . . 8 9 1 1 1 1 1 9 9 8 8 8 . 
-        . . . . 8 9 9 9 9 8 8 . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, mySprite10, 0, 50)
+    statusbar = statusbars.create(100, 4, StatusBarKind.EnemyHealth)
+    statusbar.setStatusBarFlag(StatusBarFlag.SmoothTransition, true)
+    statusbar.positionDirection(CollisionDirection.Top)
+    statusbar.setColor(2, 7)
+    statusbar.value = 100
+    statusbar.setLabel("Dragon", 2)
     battle(mySprite, mySprite10)
 }
 function battle (mySprite: Sprite, mySprite2: Sprite) {
-    turn(isWiz)
+    turn(isWiz, mySprite2)
 }
-function turn (bool: boolean) {
+function turn (bool: boolean, mySprite: Sprite) {
     if (bool == true) {
         story.printDialog("buff phase", 80, 100, 50, 150)
         if (mySprite.image == img`
@@ -260,10 +248,12 @@ function turn (bool: boolean) {
                         . . . . f . . . . 
                         `) {
                         statusbar3.value += 10
-                        statusbar2.value += 10
-                        statusbar2.value += -5
+                        statusbar2.value += 20
+                        statusbar2.value += -10
                     }
-                } else if (mySprite9.image == img`
+                }
+            } else if (controller.B.isPressed()) {
+                if (mySprite9.image == img`
                     . . f f . f f . . 
                     . f 2 2 f 2 2 f . 
                     f 2 1 2 2 2 2 2 f 
@@ -295,7 +285,8 @@ function turn (bool: boolean) {
                         . . . f 3 f . . . 
                         . . . . f . . . . 
                         `) {
-                    	
+                        statusbar3.value += 10
+                        statusbar2.value += -10
                     } else if (mySprite9.image == img`
                         . . f f . f f . . 
                         . f 2 2 f 2 2 f . 
@@ -307,11 +298,118 @@ function turn (bool: boolean) {
                         . . . f 2 f . . . 
                         . . . . f . . . . 
                         `) {
-                    	
+                        statusbar3.value += 10
+                        statusbar2.value += 10
+                        statusbar2.value += -5
                     }
                 }
-            } else {
-            	
+            }
+            story.printDialog("debuff phase", 80, 100, 50, 150)
+            if (true) {
+                pauseUntil(() => controller.B.isPressed() || controller.A.isPressed())
+                if (controller.A.isPressed()) {
+                    if (mySprite7.image == img`
+                        . . . . . . . 2 . . . . . . . . 
+                        . . . . . . 2 . . . . . . . . . 
+                        . . . . . . . . 2 . . . . . . . 
+                        . . . . . . . . 2 2 . 2 . . . . 
+                        . . . . . . . 2 . 2 . . . . . . 
+                        . . . . . . 2 2 5 2 2 . . . . . 
+                        . . . . . . 2 4 5 2 2 . . . . . 
+                        . . . . . 2 4 5 5 2 2 . . . . . 
+                        . . . . . 2 5 5 4 2 . . . . . . 
+                        . . . . . . 2 5 2 . . . . . . . 
+                        ` || mySprite7.image == img`
+                        . . f f . f f . . 
+                        . f 2 2 f c c f . 
+                        f 2 1 2 4 c c c f 
+                        f 2 2 2 4 c c c f 
+                        f 2 2 2 4 c c c f 
+                        . f 2 2 4 c c f . 
+                        . . f 2 4 c f . . 
+                        . . . f 4 f . . . 
+                        . . . . f . . . . 
+                        `) {
+                        if (mySprite7.image == img`
+                            . . . . . . . 2 . . . . . . . . 
+                            . . . . . . 2 . . . . . . . . . 
+                            . . . . . . . . 2 . . . . . . . 
+                            . . . . . . . . 2 2 . 2 . . . . 
+                            . . . . . . . 2 . 2 . . . . . . 
+                            . . . . . . 2 2 5 2 2 . . . . . 
+                            . . . . . . 2 4 5 2 2 . . . . . 
+                            . . . . . 2 4 5 5 2 2 . . . . . 
+                            . . . . . 2 5 5 4 2 . . . . . . 
+                            . . . . . . 2 5 2 . . . . . . . 
+                            `) {
+                            projectile2 = sprites.createProjectileFromSprite(mySprite7.image, mySprite, 0, 0)
+                            projectile2.follow(mySprite)
+                        } else if (mySprite7.image == img`
+                            . . f f . f f . . 
+                            . f 2 2 f c c f . 
+                            f 2 1 2 4 c c c f 
+                            f 2 2 2 4 c c c f 
+                            f 2 2 2 4 c c c f 
+                            . f 2 2 4 c c f . 
+                            . . f 2 4 c f . . 
+                            . . . f 4 f . . . 
+                            . . . . f . . . . 
+                            `) {
+                        	
+                        }
+                    }
+                } else if (controller.B.isPressed()) {
+                    if (mySprite9.image == img`
+                        . . f f . f f . . 
+                        . f 2 2 f 2 2 f . 
+                        f 2 1 2 2 2 2 2 f 
+                        f 2 2 2 9 2 2 2 f 
+                        f 2 2 9 9 9 2 2 f 
+                        . f 2 2 9 2 2 f . 
+                        . . f 2 2 2 f . . 
+                        . . . f 2 f . . . 
+                        . . . . f . . . . 
+                        ` || mySprite9.image == img`
+                        . . f f . f f . . 
+                        . f 3 3 f 3 3 f . 
+                        f 3 d 3 3 3 3 3 f 
+                        f 3 3 3 3 3 3 3 f 
+                        f 3 3 3 3 3 3 3 f 
+                        . f 3 3 3 3 3 f . 
+                        . . f 3 3 3 f . . 
+                        . . . f 3 f . . . 
+                        . . . . f . . . . 
+                        `) {
+                        if (mySprite9.image == img`
+                            . . f f . f f . . 
+                            . f 3 3 f 3 3 f . 
+                            f 3 d 3 3 3 3 3 f 
+                            f 3 3 3 3 3 3 3 f 
+                            f 3 3 3 3 3 3 3 f 
+                            . f 3 3 3 3 3 f . 
+                            . . f 3 3 3 f . . 
+                            . . . f 3 f . . . 
+                            . . . . f . . . . 
+                            `) {
+                            statusbar3.value += 10
+                            statusbar2.value += -10
+                        } else if (mySprite9.image == img`
+                            . . f f . f f . . 
+                            . f 2 2 f 2 2 f . 
+                            f 2 1 2 2 2 2 2 f 
+                            f 2 2 2 9 2 2 2 f 
+                            f 2 2 9 9 9 2 2 f 
+                            . f 2 2 9 2 2 f . 
+                            . . f 2 2 2 f . . 
+                            . . . f 2 f . . . 
+                            . . . . f . . . . 
+                            `) {
+                            statusbar3.value += 10
+                            statusbar2.value += 10
+                            statusbar2.value += -5
+                        }
+                    }
+                }
             }
         } else {
         	
@@ -320,12 +418,13 @@ function turn (bool: boolean) {
     	
     }
 }
-let projectile: Sprite = null
+let projectile2: Sprite = null
+let statusbar: StatusBarSprite = null
 let mySprite10: Sprite = null
 let list: Sprite[] = []
-let mySprite9: Sprite = null
-let mySprite8: Sprite = null
 let mySprite7: Sprite = null
+let mySprite8: Sprite = null
+let mySprite9: Sprite = null
 let statusbar3: StatusBarSprite = null
 let mySprite6: Sprite = null
 let mySprite5: Sprite = null
@@ -530,7 +629,7 @@ if (story.checkLastAnswer("warlock")) {
         f a a a a a b a a f . . . . . . 
         f f f f f f f f f f . . . . . . 
         `, SpriteKind.Player)
-    mySprite7 = sprites.create(img`
+    mySprite9 = sprites.create(img`
         . . . . . . . 2 . . . . . . . . 
         . . . . . . 2 . . . . . . . . . 
         . . . . . . . . 2 . . . . . . . 
@@ -542,7 +641,7 @@ if (story.checkLastAnswer("warlock")) {
         . . . . . 2 5 5 4 2 . . . . . . 
         . . . . . . 2 5 2 . . . . . . . 
         `, SpriteKind.spell)
-    mySprite7.setPosition(mySprite4.x, mySprite4.y)
+    mySprite9.setPosition(mySprite4.x, mySprite4.y)
     mySprite8 = sprites.create(img`
         f f f f f f f f f 
         f 9 9 9 9 9 9 9 f 
@@ -555,7 +654,7 @@ if (story.checkLastAnswer("warlock")) {
         f f f f f f f f f 
         `, SpriteKind.spell)
     mySprite8.setPosition(mySprite5.x, mySprite5.y)
-    mySprite9 = sprites.create(img`
+    mySprite7 = sprites.create(img`
         . . f f . f f . . 
         . f 3 3 f 3 3 f . 
         f 3 d 3 3 3 3 3 f 
@@ -566,7 +665,7 @@ if (story.checkLastAnswer("warlock")) {
         . . . f 3 f . . . 
         . . . . f . . . . 
         `, SpriteKind.spell)
-    mySprite9.setPosition(mySprite6.x, mySprite6.y)
+    mySprite7.setPosition(mySprite6.x, mySprite6.y)
     list = [mySprite7, mySprite8, mySprite9]
 } else if (story.checkLastAnswer("wizard")) {
     mySprite = sprites.create(img`
